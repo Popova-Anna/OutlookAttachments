@@ -22,14 +22,16 @@ namespace OutlookAttachments.Core
             _outlookService = outlookService;
         }
 
-
-        private string RemoveForbiddenCharacters(string input)
-        {            
+        static private string RemoveForbiddenCharacters(string input)
+        {
+            if (input == "" || input == null)
+                return "Пустая тема";
             char[] forbiddenCharacters = { '/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', '.' };        
-            string sanitizedInput = new string(input.Where(c => !forbiddenCharacters.Contains(c)).ToArray());
+            string sanitizedInput = new(input.Where(c => !forbiddenCharacters.Contains(c)).ToArray());
 
             return sanitizedInput;
         }
+
         public void SaveAttachments(DateTime startDate, DateTime endDate, string saveLocation)
         {
            

@@ -34,9 +34,9 @@ namespace OutlookAttachments.Core
 
         public MailItem[] GetInboxItems(DateTime startDate, DateTime endDate)
         {
-            Outlook.Account selectedAccount = null;
+            Account selectedAccount = null;
 
-            foreach (Outlook.Account _account in _outlookNamespace.Accounts)
+            foreach (Account _account in _outlookNamespace.Accounts)
             {
                 if (_account.DisplayName == "eis@zms-chita.ru")
                 {
@@ -44,8 +44,7 @@ namespace OutlookAttachments.Core
                     break;
                 }
             }
-            Outlook.Folder inboxFolder = selectedAccount.DeliveryStore.GetDefaultFolder(Outlook.OlDefaultFolders.olFolderInbox) as Outlook.Folder;
-           // MAPIFolder inboxFolder = _outlookNamespace.GetDefaultFolder(OlDefaultFolders.olFolderInbox);
+            Folder inboxFolder = selectedAccount.DeliveryStore.GetDefaultFolder(OlDefaultFolders.olFolderInbox) as Folder;
             Items items = inboxFolder.Items;
             items.Sort("[ReceivedTime]", true); // Сортировка по дате получения письма в порядке убывания
             items = items.Restrict($"[ReceivedTime] >= '{startDate:dd/MM/yyyy HH:mm}' AND [ReceivedTime] <= '{endDate:dd/MM/yyyy HH:mm}'");
@@ -68,7 +67,7 @@ namespace OutlookAttachments.Core
         }
         public List<Account> GetMailAccounts()
         {
-            List<Account> accounts = new List<Account>();
+            List<Account> accounts = new();
             foreach (Account account in _outlookNamespace.Session.Accounts)
             {
                 accounts.Add(account);

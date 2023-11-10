@@ -1,6 +1,6 @@
 ﻿namespace OutlookAttachments
 {
-    partial class Form1
+    partial class Main
     {
         /// <summary>
         ///  Required designer variable.
@@ -34,11 +34,8 @@
             dtpEndDate = new DateTimePicker();
             dtpStartDate = new DateTimePicker();
             btnSave = new Button();
-            groupBox2 = new GroupBox();
-            txtSaveLocation = new TextBox();
-            btnBrowse = new Button();
+            setting = new Button();
             groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
@@ -48,7 +45,7 @@
             groupBox1.Controls.Add(dtpEndDate);
             groupBox1.Controls.Add(dtpStartDate);
             groupBox1.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            groupBox1.Location = new Point(12, 12);
+            groupBox1.Location = new Point(12, 27);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(362, 105);
             groupBox1.TabIndex = 0;
@@ -89,9 +86,8 @@
             // 
             // btnSave
             // 
-            btnSave.Enabled = false;
             btnSave.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            btnSave.Location = new Point(114, 238);
+            btnSave.Location = new Point(116, 138);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(140, 42);
             btnSave.TabIndex = 2;
@@ -99,50 +95,31 @@
             btnSave.UseVisualStyleBackColor = true;
             btnSave.Click += btnSave_Click;
             // 
-            // groupBox2
+            // setting
             // 
-            groupBox2.Controls.Add(txtSaveLocation);
-            groupBox2.Controls.Add(btnBrowse);
-            groupBox2.Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            groupBox2.Location = new Point(12, 123);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(362, 100);
-            groupBox2.TabIndex = 3;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Место сохранения";
-            // 
-            // txtSaveLocation
-            // 
-            txtSaveLocation.Enabled = false;
-            txtSaveLocation.Location = new Point(6, 38);
-            txtSaveLocation.Name = "txtSaveLocation";
-            txtSaveLocation.Size = new Size(153, 26);
-            txtSaveLocation.TabIndex = 1;
-            // 
-            // btnBrowse
-            // 
-            btnBrowse.Location = new Point(182, 34);
-            btnBrowse.Name = "btnBrowse";
-            btnBrowse.Size = new Size(145, 32);
-            btnBrowse.TabIndex = 0;
-            btnBrowse.Text = "Выбрать путь...";
-            btnBrowse.UseVisualStyleBackColor = true;
-            btnBrowse.Click += btnBrowse_Click;
+            setting.BackColor = Color.Transparent;
+            setting.FlatStyle = FlatStyle.Flat;
+            setting.Image = Properties.Resources.settings__1_;
+            setting.Location = new Point(349, 3);
+            setting.Name = "setting";
+            setting.Size = new Size(25, 27);
+            setting.TabIndex = 3;
+            setting.UseVisualStyleBackColor = false;
+            setting.Click += setting_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(388, 301);
-            Controls.Add(groupBox2);
+            ClientSize = new Size(388, 196);
+            Controls.Add(setting);
             Controls.Add(groupBox1);
             Controls.Add(btnSave);
             Name = "Form1";
             Text = "Сохранение вложений из писем";
+            Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -154,8 +131,6 @@
         private DateTimePicker dtpStartDate;
         private Label label2;
         private Label label1;
-        private GroupBox groupBox2;
-        private Button btnBrowse;
-        private TextBox txtSaveLocation;
+        private Button setting;
     }
 }
