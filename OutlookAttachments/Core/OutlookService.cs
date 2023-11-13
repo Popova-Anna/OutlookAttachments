@@ -1,24 +1,9 @@
 ﻿using Microsoft.Office.Interop.Outlook;
 using Serilog;
-using Serilog.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using Outlook = Microsoft.Office.Interop.Outlook;
 
 namespace OutlookAttachments.Core
 {
-    public interface IOutlookService
-    {
-        MailItem[] GetInboxItems(DateTime startDate, DateTime endDate);
-        void SaveAttachment(Attachment attachment, string filePath);
-
-        List<Account> GetMailAccounts();
-    }
     internal class OutlookService : IOutlookService
     {
         private readonly Outlook.Application _outlookApp;
@@ -28,13 +13,12 @@ namespace OutlookAttachments.Core
         {
             _outlookApp = new Outlook.Application();
             _outlookNamespace = _outlookApp.GetNamespace("MAPI");
-            _outlookNamespace.Logon("eis@zms-chita.ru", "f28e4eJp8", false, true);
             _logger = logger;
         }
 
         public MailItem[] GetInboxItems(DateTime startDate, DateTime endDate)
         {
-            Account selectedAccount = null;
+            Account? selectedAccount = null;
 
             foreach (Account _account in _outlookNamespace.Accounts)
             {
@@ -44,7 +28,7 @@ namespace OutlookAttachments.Core
                     break;
                 }
             }
-            Folder inboxFolder = selectedAccount.DeliveryStore.GetDefaultFolder(OlDefaultFolders.olFolderInbox) as Folder;
+            Folder? inboxFolder = selectedAccount?.DeliveryStore.GetDefaultFolder(OlDefaultFolders.olFolderInbox) as Folder;
             Items items = inboxFolder.Items;
             items.Sort("[ReceivedTime]", true); // Сортировка по дате получения письма в порядке убывания
             items = items.Restrict($"[ReceivedTime] >= '{startDate:dd/MM/yyyy HH:mm}' AND [ReceivedTime] <= '{endDate:dd/MM/yyyy HH:mm}'");
@@ -61,16 +45,17 @@ namespace OutlookAttachments.Core
             }
             catch (System.Exception ex)
             {
-                _logger.Error("Ошибка сохранения файлов." + ex.Message);
+                _logger.Error("Ошибка сохранения файлов." + ex.StackTrace);
                 MessageBox.Show("" + ex.Message);
+                throw;
             }
         }
-        public List<Account> GetMailAccounts()
+        public List<string> GetMailAccounts()
         {
-            List<Account> accounts = new();
+            List<string> accounts = new();
             foreach (Account account in _outlookNamespace.Session.Accounts)
             {
-                accounts.Add(account);
+                accounts.Add(account.DisplayName);
             }
             return accounts;
         }

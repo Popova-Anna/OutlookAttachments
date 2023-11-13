@@ -34,7 +34,6 @@
             dtpEndDate = new DateTimePicker();
             dtpStartDate = new DateTimePicker();
             btnSave = new Button();
-            setting = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -93,19 +92,8 @@
             btnSave.TabIndex = 2;
             btnSave.Text = "Выполнить";
             btnSave.UseVisualStyleBackColor = true;
-            btnSave.Click += btnSave_Click;
-            // 
-            // setting
-            // 
-            setting.BackColor = Color.Transparent;
-            setting.FlatStyle = FlatStyle.Flat;
-            setting.Image = Properties.Resources.settings__1_;
-            setting.Location = new Point(349, 3);
-            setting.Name = "setting";
-            setting.Size = new Size(25, 27);
-            setting.TabIndex = 3;
-            setting.UseVisualStyleBackColor = false;
-            setting.Click += setting_Click;
+            btnSave.Click += BtnSave_Click;
+           
             // 
             // Form1
             // 
@@ -117,7 +105,6 @@
             Controls.Add(btnSave);
             Name = "Form1";
             Text = "Сохранение вложений из писем";
-            Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

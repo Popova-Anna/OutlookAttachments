@@ -8,10 +8,6 @@ using Serilog;
 
 namespace OutlookAttachments.Core
 {
-    public interface IAttachmentSaver
-    {
-        void SaveAttachments(DateTime startDate, DateTime endDate, string saveLocation);
-    }
     internal class AttachmentSaver : IAttachmentSaver
     {
         private readonly IOutlookService _outlookService;
@@ -26,7 +22,7 @@ namespace OutlookAttachments.Core
         {
             if (input == "" || input == null)
                 return "Пустая тема";
-            char[] forbiddenCharacters = { '/', '\\', '?', '%', '*', ':', '|', '"', '<', '>', '.' };        
+            char[] forbiddenCharacters = { '/', '\\', '?', '%', '*', ':', '|', '"', '<', '>' };        
             string sanitizedInput = new(input.Where(c => !forbiddenCharacters.Contains(c)).ToArray());
 
             return sanitizedInput;
@@ -41,15 +37,15 @@ namespace OutlookAttachments.Core
             foreach (Outlook.MailItem mailItem in mailItems)
             {
                 //Получаем тему письма
-                string subject = RemoveForbiddenCharacters( mailItem.Subject);
+                var subject = RemoveForbiddenCharacters( mailItem.Subject);
 
                 // Получаем дату получения письма
-                DateTime receivedDate = mailItem.ReceivedTime; 
-                string subjectFolder = Path.Combine(saveLocation, subject);
+                var receivedDate = mailItem.ReceivedTime; 
+                var subjectFolder = Path.Combine(saveLocation, subject);
 
                 // Создаем имя папки по дате получения письма
-                string dateFolder = receivedDate.ToString("yyyy-MM-dd");
-                string attachmentsFolder = Path.Combine(subjectFolder, dateFolder);
+                var dateFolder = receivedDate.ToString("yyyy-MM-dd");
+                var attachmentsFolder = Path.Combine(subjectFolder, dateFolder);
 
 
                 if (mailItem.Attachments.Count > 0)
@@ -68,7 +64,7 @@ namespace OutlookAttachments.Core
 
                     foreach (Outlook.Attachment attachment in mailItem.Attachments)
                     {
-                        string attachmentFileName = Path.Combine(attachmentsFolder, attachment.FileName);
+                        var attachmentFileName = Path.Combine(attachmentsFolder, attachment.FileName);
                         _outlookService.SaveAttachment(attachment, attachmentFileName);
                     }
                 }

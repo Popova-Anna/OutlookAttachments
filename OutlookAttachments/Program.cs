@@ -15,10 +15,16 @@ namespace OutlookAttachments
             // see https://aka.ms/applicationconfiguration.
             try
             {
-               
+                var logger = new LoggerConfiguration()
+                .WriteTo.File(System.Configuration.ConfigurationManager.AppSettings["path"] + "/log.txt")
+                .MinimumLevel.Verbose()
+                .CreateLogger();
+                var service = new OutlookService(logger);
+                var attachmentSaver = new AttachmentSaver(service);
+
                 Application.EnableVisualStyles();
                 ApplicationConfiguration.Initialize();
-                Application.Run(new Main());
+                Application.Run(new Main(attachmentSaver, logger));
             }
             catch (Exception ex)
             {
