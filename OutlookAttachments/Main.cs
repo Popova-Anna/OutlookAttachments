@@ -30,7 +30,7 @@ namespace OutlookAttachments
             catch (Exception ex)
             {
                 _logger.Error($"Ошибка сохранения вложения: {ex.StackTrace}");
-                MessageBox.Show($"Ошибка сохранения вложения: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ошибка сохранения вложения: {ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }

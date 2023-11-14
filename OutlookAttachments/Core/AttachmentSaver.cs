@@ -22,8 +22,8 @@ namespace OutlookAttachments.Core
         {
             if (input == "" || input == null)
                 return "Пустая тема";
-            char[] forbiddenCharacters = { '/', '\\', '?', '%', '*', ':', '|', '"', '<', '>' };        
-            string sanitizedInput = new(input.Where(c => !forbiddenCharacters.Contains(c)).ToArray());
+            char[] forbiddenCharacters = { '/', '\\', '?', '%', '*', ':', '|', '"', '<', '>' };
+            string sanitizedInput = new(input.Select(c => forbiddenCharacters.Contains(c) ? '_' : c).ToArray());
 
             return sanitizedInput;
         }

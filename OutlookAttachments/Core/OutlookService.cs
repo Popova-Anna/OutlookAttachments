@@ -19,25 +19,52 @@ namespace OutlookAttachments.Core
         public MailItem[] GetInboxItems(DateTime startDate, DateTime endDate)
         {
             Account? selectedAccount = null;
-
-            foreach (Account _account in _outlookNamespace.Accounts)
+            try
             {
-                if (_account.DisplayName == "eis@zms-chita.ru")
+                foreach (Account _account in _outlookNamespace.Accounts)
                 {
-                    selectedAccount = _account;
-                    break;
+                    _logger.Information("Найден аккаунт: " + _account.CurrentUser.Address);
+                    if (_account.CurrentUser.Address == "eis@zms-chita.ru")
+                    {
+                        _logger.Information("Успешное нахождение аккаунта: "+_account.CurrentUser.Address);
+                        selectedAccount = _account;
+                        break;
+                    }
                 }
+                if (selectedAccount == null)
+                {
+                    _logger.Error("Ошибка. Не найден аккаунт");
+                    throw new ArgumentOutOfRangeException(nameof(selectedAccount), "Ошибка. Не найден аккаунт.");
+                    
+                }
+                Folder? inboxFolder = selectedAccount.DeliveryStore.GetDefaultFolder(OlDefaultFolders.olFolderInbox) as Folder;
+                if (inboxFolder == null)
+                {
+                    _logger.Error("Ошибка. Не найдена папка");
+                    throw new ArgumentOutOfRangeException(nameof(inboxFolder), "Ошибка. Не найдена папака.");
+                }
+                Items items = inboxFolder.Items;
+                items.Sort("[ReceivedTime]", true); // Сортировка по дате получения письма в порядке убывания
+                items = items.Restrict($"[ReceivedTime] >= '{startDate:dd/MM/yyyy HH:mm}' AND [ReceivedTime] <= '{endDate:dd/MM/yyyy HH:mm}'");
+                return items.Cast<MailItem>().ToArray();
             }
-            Folder? inboxFolder = selectedAccount?.DeliveryStore.GetDefaultFolder(OlDefaultFolders.olFolderInbox) as Folder;
-            Items items = inboxFolder.Items;
-            items.Sort("[ReceivedTime]", true); // Сортировка по дате получения письма в порядке убывания
-            items = items.Restrict($"[ReceivedTime] >= '{startDate:dd/MM/yyyy HH:mm}' AND [ReceivedTime] <= '{endDate:dd/MM/yyyy HH:mm}'");
-            return items.Cast<MailItem>().ToArray();
+            catch (System.Exception ex)
+            {
+                _logger.Error("Ошибка. Либо не найдена папака. Либо не найден аккаунт." + ex.StackTrace);
+                MessageBox.Show("Ошибка. Либо не найдена папака. Либо не найден аккаунт." + ex.Message);
+                throw;
+            }
+
         }
 
 
         public void SaveAttachment(Attachment attachment, string filePath)
         {
+            if (filePath == null)
+            {
+                _logger.Error("Ошибка. Пустое место для сохранения данных.");
+                throw new ArgumentOutOfRangeException(nameof(filePath), "Ошибка. Пустое место для сохранения данных.");
+            }
             try
             {
                 attachment.SaveAsFile(filePath);
@@ -45,7 +72,7 @@ namespace OutlookAttachments.Core
             }
             catch (System.Exception ex)
             {
-                _logger.Error("Ошибка сохранения файлов." + ex.StackTrace);
+                _logger.Error("Ошибка сохранения файлов." + ex.Message + "StackTrace: " + ex.StackTrace);
                 MessageBox.Show("" + ex.Message);
                 throw;
             }
