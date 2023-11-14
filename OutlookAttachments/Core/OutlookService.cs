@@ -23,10 +23,9 @@ namespace OutlookAttachments.Core
             {
                 foreach (Account _account in _outlookNamespace.Accounts)
                 {
-                    _logger.Information("Найден аккаунт: " + _account.CurrentUser.Address);
                     if (_account.CurrentUser.Address == "eis@zms-chita.ru")
                     {
-                        _logger.Information("Успешное нахождение аккаунта: "+_account.CurrentUser.Address);
+                        _logger.Information($"Успешное нахождение аккаунта: {_account.CurrentUser.Address}");
                         selectedAccount = _account;
                         break;
                     }
@@ -41,7 +40,7 @@ namespace OutlookAttachments.Core
                 if (inboxFolder == null)
                 {
                     _logger.Error("Ошибка. Не найдена папка");
-                    throw new ArgumentOutOfRangeException(nameof(inboxFolder), "Ошибка. Не найдена папака.");
+                    throw new ArgumentOutOfRangeException(nameof(inboxFolder), "Ошибка. Не найдена папка.");
                 }
                 Items items = inboxFolder.Items;
                 items.Sort("[ReceivedTime]", true); // Сортировка по дате получения письма в порядке убывания
@@ -50,13 +49,12 @@ namespace OutlookAttachments.Core
             }
             catch (System.Exception ex)
             {
-                _logger.Error("Ошибка. Либо не найдена папака. Либо не найден аккаунт." + ex.StackTrace);
-                MessageBox.Show("Ошибка. Либо не найдена папака. Либо не найден аккаунт." + ex.Message);
+                _logger.Error($"Ошибка. Либо не найдена папка. Либо не найден аккаунт. {ex.StackTrace}");
+                MessageBox.Show($"Ошибка. Либо не найдена папка. Либо не найден аккаунт. {ex.Message}" );
                 throw;
             }
 
         }
-
 
         public void SaveAttachment(Attachment attachment, string filePath)
         {
@@ -68,23 +66,14 @@ namespace OutlookAttachments.Core
             try
             {
                 attachment.SaveAsFile(filePath);
-                _logger.Information("Сохранение вложения успешно. Путь:" + filePath);
+                _logger.Information($"Сохранение вложения успешно. Путь: {filePath}.");
             }
             catch (System.Exception ex)
             {
-                _logger.Error("Ошибка сохранения файлов." + ex.Message + "StackTrace: " + ex.StackTrace);
-                MessageBox.Show("" + ex.Message);
+                _logger.Error($"Ошибка сохранения файлов. {ex.Message}. StackTrace: {ex.StackTrace}");
+                MessageBox.Show($"Ошибка сохранения файлов. {ex.Message}");
                 throw;
             }
-        }
-        public List<string> GetMailAccounts()
-        {
-            List<string> accounts = new();
-            foreach (Account account in _outlookNamespace.Session.Accounts)
-            {
-                accounts.Add(account.DisplayName);
-            }
-            return accounts;
         }
     }
 }

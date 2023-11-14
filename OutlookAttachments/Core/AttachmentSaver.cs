@@ -18,9 +18,14 @@ namespace OutlookAttachments.Core
             _outlookService = outlookService;
         }
 
+        /// <summary>
+        /// Метод для очистки строки от запрещённых символов.
+        /// </summary>
+        /// <param name="input">Строка для проверки</param>
+        /// <returns>Очищенная строка</returns>
         static private string RemoveForbiddenCharacters(string input)
         {
-            if (input == "" || input == null)
+            if (string.IsNullOrEmpty(input))
                 return "Пустая тема";
             char[] forbiddenCharacters = { '/', '\\', '?', '%', '*', ':', '|', '"', '<', '>' };
             string sanitizedInput = new(input.Select(c => forbiddenCharacters.Contains(c) ? '_' : c).ToArray());
@@ -28,13 +33,19 @@ namespace OutlookAttachments.Core
             return sanitizedInput;
         }
 
+        /// <summary>
+        /// Метод получает письма из Outlook, создает папки для сохранения вложений на основе темы письма и даты получения, и сохраняет вложения в соответствующие папки.
+        /// </summary>
+        /// <param name="startDate">Дата начала выборки</param>
+        /// <param name="endDate">Дата окончания выборки</param>
+        /// <param name="saveLocation">Путь сохранения</param>
         public void SaveAttachments(DateTime startDate, DateTime endDate, string saveLocation)
         {
            
             
             Outlook.MailItem[] mailItems = _outlookService.GetInboxItems(startDate, endDate);
 
-            foreach (Outlook.MailItem mailItem in mailItems)
+            foreach (var mailItem in mailItems)
             {
                 //Получаем тему письма
                 var subject = RemoveForbiddenCharacters( mailItem.Subject);
@@ -50,13 +61,8 @@ namespace OutlookAttachments.Core
 
                 if (mailItem.Attachments.Count > 0)
                 {
-                    //Тема
-                    if (!Directory.Exists(subjectFolder))
-                    {
-                        Directory.CreateDirectory(subjectFolder);
-                    }
-
-                    //Дата
+                   
+                    //Создание директорий
                     if (!Directory.Exists(attachmentsFolder))
                     {
                         Directory.CreateDirectory(attachmentsFolder);

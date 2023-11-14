@@ -11,7 +11,5 @@ namespace OutlookAttachments.Core
     {
         MailItem[] GetInboxItems(DateTime startDate, DateTime endDate);
         void SaveAttachment(Attachment attachment, string filePath);
-
-        List<string> GetMailAccounts();
     }
 }
