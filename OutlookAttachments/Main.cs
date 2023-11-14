@@ -9,11 +9,13 @@ namespace OutlookAttachments
     {
         private readonly IAttachmentSaver _attachmentSaver;
         private readonly ILogger _logger;
-        public Main(IAttachmentSaver attachmentSaver, ILogger logger)
+        private string _path;
+        public Main(IAttachmentSaver attachmentSaver, ILogger logger, string path)
         {
             _attachmentSaver = attachmentSaver;
             _logger = logger;
-            InitializeComponent();
+            _path = path;   
+            InitializeComponent();         
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -23,7 +25,7 @@ namespace OutlookAttachments
 
             try
             {
-                _attachmentSaver.SaveAttachments(startDate, endDate, System.Configuration.ConfigurationManager.AppSettings["path"]);
+                _attachmentSaver.SaveAttachments(startDate, endDate, _path);
                 _logger.Information("Вложения успешно сохранены.");
                 MessageBox.Show("Вложения успешно сохранены. \nДанные по сохранённым даным хранятся в файле log.txt", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

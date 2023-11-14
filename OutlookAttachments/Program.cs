@@ -24,7 +24,7 @@ namespace OutlookAttachments
 
                 Application.EnableVisualStyles();
                 ApplicationConfiguration.Initialize();
-                Application.Run(new Main(attachmentSaver, logger));
+                Application.Run(new Main(attachmentSaver, logger, System.Configuration.ConfigurationManager.AppSettings["path"]));
             }
             catch (Exception ex)
             {
